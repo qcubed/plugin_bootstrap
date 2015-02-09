@@ -1,0 +1,16 @@
+{
+    "name": "qcubed/plugin/bootstrap",
+    "description": "QCubed wrappers for twitter bootstrap.",
+    "type": "library",
+    "keywords": ["qcubed", "bootstrap"],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.4"
+    },
+    "autoload": {
+        "psr-4": {"QCubed\\Plugin\\Bootstrap": "includes/"}
+    },
+    "extra": {
+        "examples": ["bootstrap.php", "forms.php"]
+    }
+}

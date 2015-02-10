@@ -8,7 +8,7 @@
         "php": ">=5.4"
     },
     "autoload": {
-        "psr-4": {"QCubed\\Plugin\\Bootstrap": "includes/"}
+        "psr-4": {"QCubed\\Plugin\\Bootstrap\\": "includes/"}
     },
     "extra": {
         "examples": ["bootstrap.php", "forms.php"]

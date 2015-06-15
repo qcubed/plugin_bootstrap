@@ -1,7 +1,5 @@
 <?php
 require('../../../framework/qcubed.inc.php');
-require('../includes/TextBox.class.php');
-require('../includes/Button.class.php');
 require('../includes/Control.trait.php');
 
 	use QCubed\Plugin\Bootstrap as Bs;

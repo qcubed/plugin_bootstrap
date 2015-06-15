@@ -2,8 +2,6 @@
 
 namespace QCubed\Plugin\Bootstrap;
 
-require_once ('Bootstrap.php');
-
 use \QType, \QTagStyler, \QCallerException;
 
 /**

@@ -2,8 +2,6 @@
 
 namespace QCubed\Plugin\Bootstrap;
 
-require_once ("Bootstrap.php");
-
 use \QType, \QApplication, \QHtml;
 
 class Navbar_SelectEvent extends \QEvent {

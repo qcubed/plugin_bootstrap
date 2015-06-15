@@ -1,8 +1,5 @@
 <?php
 	require_once('../../../framework/qcubed.inc.php');
-	require_once('../includes/Bootstrap.class.php');
-	require_once('../includes/NavBar.class.php');
-	require_once('../includes/Carousel.class.php');
 
 	use QCubed\Plugin\Bootstrap as Bs;
 

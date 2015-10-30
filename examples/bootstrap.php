@@ -17,7 +17,8 @@
 
 			//$this->objMenu->AddCssClass('navbar-ryaa');
 			$url = __PHP_ASSETS__ . '/_devtools/start_page.php';
-			$this->navBar->HeaderText = sprintf ('<img class="logo" src="%s/qcubed_logo_footer.png" alt="Logo" >', __IMAGE_ASSETS__);
+			$this->navBar->HeaderText = QHtml::RenderTag("img",
+				["class"=>"logo", "src"=>__IMAGE_ASSETS__ . "/qcubed_logo_footer.png", "alt"=>"Logo"], null, true);
 			$this->navBar->HeaderAnchor = $url;
 			$this->navBar->StyleClass = Bs\Bootstrap::NavbarInverse;
 

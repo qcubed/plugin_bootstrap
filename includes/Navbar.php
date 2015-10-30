@@ -74,23 +74,10 @@ TMPL;
 		return $this->RenderTag ('nav', ['role'=>'navigation'], null, $strHtml);
 	}
 
-	public function GetControlJavaScript() {
-		//$strJs = sprintf('jQuery("#%s").%s({%s})', $this->getJqControlId(), $this->getJqSetupFunction(), $this->makeJqOptions());
-		$strControlId = $this->ControlId;
-		$strJs = <<<JS
-			jQuery("#{$strControlId}").on("click", 'li', function() {
-                qcubed.recordControlModification("{$strControlId}", "SelectedId", this.id);
-                jQuery(this).trigger ('bsmenubarselect', this.id);
-
-            })
-JS;
-		return $strJs;
-
-	}
-
 	public function GetEndScript() {
-		$str = '';
-		return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+		\QApplication::ExecuteControlCommand($this->ControlId, 'on', 'click', 'li',
+			new \QJsClosure("qcubed.recordControlModification ('{$this->ControlId}', 'SelectedId', this.id); jQuery(this).trigger ('bsmenubarselect', this.id)"), \QJsPriority::High);
+		return parent::GetEndScript();
 	}
 
 
@@ -180,99 +167,7 @@ JS;
 	}
 }
 
-/**
- * Class BsNavbarList
- * Basic Navbar list for inserting into the navbar
- */
-class NavbarList extends \QHListControl {
-	protected $strCssClass = 'nav navbar-nav';
 
-	public function AddMenuItem (NavbarItem $objMenuItem) {
-		parent::AddItem ($objMenuItem);
-	}
-
-	/**
-	 * Return the text html of the item.
-	 *
-	 * @param QListItem $objItem
-	 * @return string
-	 */
-	protected function GetItemText (\QHListItem $objItem) {
-		return $objItem->GetItemText();	// redirect to subclasses of item
-	}
-
-	/**
-	 * Return the attributes for the sub tag that wraps the item tags
-	 * @param QListItem $objItem
-	 * @return null|array|string
-	 */
-	public function GetSubTagAttributes(\QHListItem $objItem) {
-		return $objItem->GetSubTagAttributes();
-	}
-
-}
-
-/**
- * Class BsNavbarItem
- * An item to add to the navbar list.
- */
-class NavbarItem extends \QHListItem {
-	protected $strAnchor = '#';  // make sure we get a default anchor for attaching clicks
-
-	public function __construct($strText = '', $strValue = null, $strAnchor = null) {
-		parent::__construct ($strText, $strValue);
-		if ($strAnchor) {
-			$this->strAnchor = $strAnchor;
-		}
-	}
-
-	public function GetItemText() {
-		$strHtml = QApplication::HtmlEntities($this->strName);
-
-		if ($strAnchor = $this->strAnchor) {
-			$strHtml = QHtml::RenderTag('a', ['href' => $strAnchor], $strHtml, false, true);
-		}
-		return $strHtml;
-	}
-
-	public function GetSubTagAttributes() {
-		return null;
-	}
-}
-
-class NavbarDivider extends NavbarItem {
-	protected $strAnchor = ''; // No anchor
-
-	public function __construct() {
-		parent::__construct('');
-		$this->objItemStyle = new \QListItemStyle();
-		$this->objItemStyle->SetCssClass('divider');
-	}
-}
-
-class NavbarDropdown extends NavbarItem {
-	public function __construct($strName) {
-		parent::__construct($strName);
-		$this->objItemStyle = new \QListItemStyle();
-		$this->objItemStyle->SetCssClass('dropdown');
-	}
-
-	public function GetItemText() {
-		$strHtml = QApplication::HtmlEntities($this->strName);
-		$strHtml = sprintf ('<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">%s <span class="caret"></span></a>', $strHtml)  . "\n";
-		return $strHtml;
-	}
-
-	/**
-	 * Return the attributes for the sub tag that wraps the item tags
-	 * @param QListItem $objItem
-	 * @return null|array|string
-	 */
-	public function GetSubTagAttributes() {
-		return ['class'=>'dropdown-menu', 'role'=>'menu'];
-	}
-
-}
 
 /*
  *

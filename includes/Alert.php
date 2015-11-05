@@ -50,42 +50,35 @@ class Alert extends \QPanel {
 
 	protected $blnDismissable = false;
 
-	public function GetAttributes($blnIncludeCustom = true, $blnIncludeAction = true) {
-		$strToReturn = parent::GetAttributes($blnIncludeCustom, $blnIncludeAction);
-		$strToReturn .= (' role="alert" ');
-		return $strToReturn;
+	public function __construct ($objParent, $strControlId = null) {
+		parent::__construct ($objParent, $strControlId);
+
+		$this->SetHtmlAttribute("role", "alert");
+		Bootstrap::LoadJS($this);
 	}
 
 	protected function GetInnerHtml() {
 		$strText = parent::GetInnerHtml();
 
 		if ($this->blnDismissable) {
-			$strText = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' . $strText;
+			$strText = \Qhtml::RenderTag('button',
+				['type'=>'button',
+				'class'=>'close',
+				'data-dismiss'=>'alert',
+				'aria-label'=>"Close",
+				],
+				'<span aria-hidden="true">&times;</span>', false, true)
+			. $strText;
 		}
 		return $strText;
 	}
 
 	public function GetEndScript() {
-		$str = '';
-		$str .= $this->GetControlJavaScript();
-		if ($strParentScript = parent::GetEndScript()) {
-			$str .= '; ' . $strParentScript;
-		}
-		return $str;
-	}
-
-	protected function GetControlJavaScript() {
 		if ($this->blnDismissable) {
-			return <<<TMPL
-			\$j("#{$this->ControlId}").on('closed.bs.alert', function () {
-				qcubed.recordControlModification ('{$this->ControlId}', '_Visible', false);
-			})
-
-TMPL;
-
-		} else {
-			return '';
+			\QApplication::ExecuteControlCommand($this->ControlId, 'on', 'closed.bs.alert',
+				new \QJsClosure("qcubed.recordControlModification ('{$this->ControlId}', '_Visible', false)"), \QJsPriority::High);
 		}
+		return parent::GetEndScript();
 	}
 
 	/**
@@ -95,7 +88,7 @@ TMPL;
 	 */
 	public function Close() {
 		$this->blnVisible = false;
-		\QApplication::ExecuteJavaScript(sprintf ('$j("%s").alert("close")', $this->ControlId));
+		\QApplication::ExecuteControlCommand($this->ControlId, 'alert', 'close');
 	}
 
 	public function __get($strName) {

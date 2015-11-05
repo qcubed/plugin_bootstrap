@@ -25,8 +25,8 @@ class Accordion extends \QDataRepeater {
 		parent::__construct ($objParent, $strControlId);
 
 		$this->strTemplate = __DIR__ . '/accordion.tpl.php';
-		$this->SetCustomAttribute("role", "tablist");
-		$this->SetCustomAttribute("aria-multiselectable", "true");
+		$this->SetHtmlAttribute("role", "tablist");
+		$this->SetHtmlAttribute("aria-multiselectable", "true");
 		Bootstrap::LoadJS($this);
 	}
 
@@ -95,13 +95,14 @@ class Accordion extends \QDataRepeater {
 		}
 		$strCollapseId = $this->strControlId . '_collapse_' . $this->intCurrentItemIndex;
 
-		$strOut = sprintf ('<a class= "%s" data-toggle="collapse" data-parent="#%s" href="#%s" aria-expanded="%s" aria-controls="#%s">%s</a>',
-			$strClass,
-			$this->strControlId,
-			$strCollapseId,
-			$strExpanded,
-			$strCollapseId,
-			$strHtml);
+		$strOut = \QHtml::RenderTag('a',
+				['class'=>$strClass,
+				'data-toggle'=>'collapse',
+				'data-parent'=>'#' . $this->strControlId,
+				'href'=>$strCollapseId,
+				'aria-expanded'=>$strExpanded,
+				'aria-controls'=>$strCollapseId],
+				$strHtml, false, true);
 
 		if ($blnRenderOutput) {
 			echo $strOut;

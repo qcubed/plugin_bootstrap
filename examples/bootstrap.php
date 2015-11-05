@@ -26,13 +26,13 @@
 			$objEditMenu = new Bs\NavbarDropdown('New');
 
 			// Add all the lists and edits in the drafts directory
-			$list = scandir (__DOCROOT__ . __FORM_DRAFTS__);
+			$list = scandir (__DOCROOT__ . __FORMS__);
 			foreach ($list as $name) {
 				if ($offset = strpos ($name, '_list.php')) {
-					$objListMenu->AddItem (new Bs\NavbarItem(substr ($name, 0, $offset), null, __FORM_DRAFTS__ . '/' .  $name));
+					$objListMenu->AddItem (new Bs\NavbarItem(substr ($name, 0, $offset), null, __FORMS__ . '/' .  $name));
 				}
 				elseif ($offset = strpos ($name, '_edit.php')) {
-					$objEditMenu->AddItem (new Bs\NavbarItem(substr ($name, 0, $offset), null, __FORM_DRAFTS__ . '/' . $name));
+					$objEditMenu->AddItem (new Bs\NavbarItem(substr ($name, 0, $offset), null, __FORMS__ . '/' . $name));
 				}
 			}
 

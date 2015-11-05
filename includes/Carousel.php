@@ -85,20 +85,10 @@ TMPL;
 		return $this->RenderTag('div', ['data-ride'=>'carousel'], null, $strHtml);
 	}
 
-	public function GetControlJavaScript() {
-		$strJs = <<<JS
-			jQuery("#{$this->strControlId}").on("click", '.item', function() {
-                jQuery(this).trigger ('bscarousselect', this.id);
-
-            })
-JS;
-		return $strJs;
-
-	}
-
 	public function GetEndScript() {
-		$str = '';
-		return $str . $this->GetControlJavaScript() . '; ' . parent::GetEndScript();
+		\QApplication::ExecuteControlCommand($this->ControlId, 'on', 'click', '.item',
+			new \QJsClosure("jQuery(this).trigger('bscarousselect', this.id)"), \QJsPriority::High);
+		return parent::GetEndScript();
 	}
 
 }

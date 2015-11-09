@@ -394,6 +394,13 @@ abstract class Bootstrap {
 	const Inline = 'inline';
 	const InlineBlock = 'inline-block';
 
+	/** Nav */
+
+	const Nav = "nav";
+	const NavTabs = "nav-tabs";
+	const NavPills = "nav-pills";
+	const NavJustified = "nav-justified";
+
 	/** Navbar */
 
 	const Navbar = 'nabar';
@@ -407,7 +414,6 @@ abstract class Bootstrap {
 	const NavbarBrand = 'navbar-brand';
 	const NavbarToggle = 'navbar-toggle';
 
-	const Nav = 'nav';
 	const NavbarNav = 'navbar-nav';
 
 	const NavbarLeft = 'navbar-left';

@@ -2,7 +2,14 @@
 /**
  * TextBox
  * Text boxes can be parts of input groups (implemented), and can have feedback icons (not yet implemented).
+ *
+ * @property string $SizingClass Bootstrap::InputGroupLarge, Bootstrap::InputGroupMedium or Bootstrap::InputGroupSmall
+ * @property string $LeftText Text to appear to the left of the input item.
+ * @property string $RightText Text to appear to the right of the input item.
+ *
+
  */
+
 namespace QCubed\Plugin\Bootstrap;
 
 use \QType;

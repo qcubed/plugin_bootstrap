@@ -11,7 +11,7 @@
         "psr-4": {"QCubed\\Plugin\\Bootstrap\\": "includes/"}
     },
     "extra": {
-        "examples": ["bootstrap.php", "forms.php"],
+        "examples": ["bootstrap.php", "forms.php", "nav.php", "list_group.php"],
         "exampleExtras": {"forms.php":["forms1.tpl.php", "forms2.tpl.php", "forms3.tpl.php", "forms4.tpl.php", "forms5.tpl.php"]}
     }
 }

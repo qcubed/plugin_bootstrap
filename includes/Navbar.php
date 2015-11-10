@@ -2,6 +2,8 @@
 
 namespace QCubed\Plugin\Bootstrap;
 
+include_once("Bootstrap.php");
+
 use \QType, \QApplication, \QHtml;
 
 class Navbar_SelectEvent extends \QEvent {
@@ -40,6 +42,9 @@ class Navbar extends \QControl {
 	public function Validate() {return true;}
 	public function ParsePostData() {}
 
+	/**
+	 * @return string
+	 */
 	protected function GetControlHtml() {
 		$strChildControlHtml = $this->RenderChildren(false);
 
@@ -74,6 +79,9 @@ TMPL;
 		return $this->RenderTag ('nav', ['role'=>'navigation'], null, $strHtml);
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetEndScript() {
 		\QApplication::ExecuteControlCommand($this->ControlId, 'on', 'click', 'li',
 			new \QJsClosure("qcubed.recordControlModification ('{$this->ControlId}', 'SelectedId', this.id); jQuery(this).trigger ('bsmenubarselect', this.id)"), \QJsPriority::High);

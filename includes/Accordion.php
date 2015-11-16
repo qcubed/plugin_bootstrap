@@ -1,4 +1,7 @@
 <?php
+namespace QCubed\Plugin\Bootstrap;
+
+
 /**
  * Accordion class
  * A wrapper class for objects that will be displayed using the RenderFormGroup method, and that will be drawn using
@@ -8,8 +11,9 @@
  *
  * Also, for objects that will be drawn with labels, use the "sr-only" class to hide the labels so that they are
  * available for screen readers.
+ *
+ * @property-write string $PanelStyle
  */
-namespace QCubed\Plugin\Bootstrap;
 
 
 class Accordion extends \QDataRepeater {
@@ -20,6 +24,7 @@ class Accordion extends \QDataRepeater {
 	protected $strCssClass = Bootstrap::PanelGroup;
 	protected $intCurrentOpenItem = 0;
 	protected $drawingCallback;
+	protected $strPanelStyle = Bootstrap::PanelDefault;
 
 	public function __construct ($objParent, $strControlId = null) {
 		parent::__construct ($objParent, $strControlId);
@@ -78,10 +83,45 @@ class Accordion extends \QDataRepeater {
 		}
 	}
 
+	public function Sleep() {
+		$this->drawingCallback = \QControl::SleepHelper($this->drawingCallback);
+		parent::Sleep();
+	}
+
+	/**
+	 * The object has been unserialized, so fix up pointers to embedded objects.
+	 * @param QForm $objForm
+	 */
+	public function Wakeup(\QForm $objForm) {
+		parent::Wakeup($objForm);
+		$this->drawingCallback = \QControl::WakeupHelper($objForm, $this->drawingCallback);
+	}
+
+	/**
+	 * @return mixed
+	 */
+	protected function GetState() {
+		$state = parent::GetState();
+		if ($this->intCurrentOpenItem !== null) {
+			$state["sel"] = $this->intCurrentOpenItem;
+		}
+		return $state;
+	}
+
+	/**
+	 * @param mixed $state
+	 */
+	protected function PutState($state) {
+		if (isset ($state["sel"])) {
+			$this->intCurrentOpenItem = $state["sel"];
+		}
+		parent::PutState($state);
+	}
+
 
 	/**
 	 * Renders the given html with an anchor wrapper that will make it toggle the currently drawn item. This should be called
-	 * from your drawing callback.
+	 * from your drawing callback when drawing the heading. This could span the entire heading, or just a portion.
 	 *
 	 * @param $strHtml
 	 */
@@ -99,7 +139,7 @@ class Accordion extends \QDataRepeater {
 				['class'=>$strClass,
 				'data-toggle'=>'collapse',
 				'data-parent'=>'#' . $this->strControlId,
-				'href'=>$strCollapseId,
+				'href'=>'#' . $strCollapseId,
 				'aria-expanded'=>$strExpanded,
 				'aria-controls'=>$strCollapseId],
 				$strHtml, false, true);
@@ -111,5 +151,24 @@ class Accordion extends \QDataRepeater {
 		}
 
 	}
+
+	public function __set($strName, $mixValue) {
+		switch ($strName) {
+			case 'PanelStyle':
+				$this->strPanelStyle = \QType::Cast($mixValue, \QType::String);
+				break;
+
+			default:
+				try {
+					parent::__set($strName, $mixValue);
+				} catch (QCallerException $objExc) {
+					$objExc->IncrementOffset();
+					throw $objExc;
+				}
+				break;
+		}
+	}
+
+
 
 }

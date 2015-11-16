@@ -6,10 +6,13 @@
 	class SampleForm extends QForm {
 		protected $navBar;
 		protected $carousel;
+		/** @var  Bs\Accordion */
+		protected $accordion;
 
 		protected function Form_Create() {
 			$this->NavBar_Create();
 			$this->Carousel_Create();
+			$this->Accordion_Create();
 		}
 
 		protected function NavBar_Create() {
@@ -55,6 +58,31 @@
 			$this->carousel->AddListItem(new Bs\CarouselItem('rhino.jpg', 'Rhino'));
 			$this->carousel->AddListItem(new Bs\CarouselItem('pig.jpg', 'Pig'));
 		}
+
+		protected function Accordion_Create() {
+			$this->accordion = new Bs\Accordion($this);
+			$this->accordion->SetDataBinder("Accordion_Bind");
+			$this->accordion->SetDrawingCallback([$this, "Accordion_Draw"]);
+		}
+
+		protected function Accordion_Bind() {
+			$this->accordion->DataSource = Person::LoadAll([QQ::Expand(QQN::Person()->Address)]);
+		}
+
+		public function Accordion_Draw($objAccordion, $strPart, $objItem, $intIndex) {
+			switch ($strPart) {
+				case Bs\Accordion::RenderHeader:
+					$objAccordion->RenderToggleHelper(QApplication::HtmlEntities($objItem->FirstName . ' ' . $objItem->LastName));
+					break;
+
+				case Bs\Accordion::RenderBody:
+					if ($objItem->Address) {
+						echo "<b>Address: </b>" . $objItem->Address->Street . ", " . $objItem->Address->City . "<br />";
+					}
+					break;
+			}
+		}
+
 	}
 
 	SampleForm::Run('SampleForm');

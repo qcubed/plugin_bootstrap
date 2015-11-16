@@ -5,7 +5,7 @@
 	 * use your own template if this does not suit your needs.
 	 */
 ?>
-	<div class="panel panel-default">
+	<div class="panel <?= $this->strPanelStyle?>">
 		<div class="panel-heading" role="tab" id="<?= $this->strControlId ?>_heading_<?= $this->intCurrentItemIndex ?>">
 			<?php $this->RenderHeading($_ITEM); ?>
 		</div>

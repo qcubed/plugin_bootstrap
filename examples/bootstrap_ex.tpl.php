@@ -27,6 +27,10 @@
 		Carousel
 	</h2>
 	<?php $this->carousel->Render(); ?>
+	<h2>
+		Accordion
+	</h2>
+<?php $this->accordion->Render(); ?>
 
 
 <?php $this->RenderEnd(); ?>

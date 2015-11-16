@@ -17,18 +17,19 @@ class Button extends \QButton {
 	protected $strButtonSize = '';
 	protected $strGlyph;
 
+	public function SetStyleClass($strStyleClass) {
+		$this->RemoveCssClass($this->strButtonStyle);
+		$this->strButtonStyle = QType::Cast ($strStyleClass, QType::String);
+		$this->AddCssClass($this->strButtonStyle);
+	}
+
 	public function __set($strName, $mixValue) {
 		switch ($strName) {
 			case "StyleClass":	// One of Bootstrap::ButtonDefault, ButtonPrimary, ButtonSuccess, ButtonInfo, ButtonWarning, ButtonDanger
-				$this->RemoveCssClass($this->strButtonStyle);
-				$this->strButtonStyle = QType::Cast ($mixValue, QType::String);
-				$this->AddCssClass($this->strButtonStyle);
 				break;
 
 			case "SizeClass": // One of Bootstrap::ButtonLarge, ButtonMedium, ButtonSmall, ButtonExtraSmall
-				$this->RemoveCssClass($this->strButtonSize);
-				$this->strButtonSize = QType::Cast ($mixValue, QType::String);
-				$this->AddCssClass($this->strButtonSize);
+				$this->SetStyleClass($mixValue);
 				break;
 
 			case "Glyph": // One of the glyph icons
@@ -38,9 +39,9 @@ class Button extends \QButton {
 			case "PrimaryButton":
 				try {
 					$this->blnPrimaryButton = QType::Cast($mixValue, QType::Boolean);
-					$this->StyleClass = Bootstrap::ButtonPrimary;
+					$this->SetStyleClass(Bootstrap::ButtonPrimary);
 					break;
-				} catch (QInvalidCastException $objExc) {
+				} catch (\QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
@@ -49,7 +50,7 @@ class Button extends \QButton {
 			default:
 				try {
 					parent::__set($strName, $mixValue);
-				} catch (QInvalidCastException $objExc) {
+				} catch (\QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}

@@ -5,7 +5,7 @@ namespace QCubed\Plugin\Bootstrap;
 use \QType, \QTagStyler, \QCallerException;
 
 /**
- * Base bootstrap control trait. Th preferred method of adding bootstrap functionality is to make your QControl class
+ * Base bootstrap control trait. The preferred method of adding bootstrap functionality is to make your QControl class
  * inherit from the Control class in Control.class.php. Alternatively you can use this trait to make a control a
  * bootstrap control, but you have to be careful of method collisions. The best way to do this is probably to
  * use it in a derived class of the base class.
@@ -116,12 +116,19 @@ trait ControlTrait {
 	 * has different ways of doing things too.
 	 *
 	 * @param bool $blnDisplayOutput
+	 * @return string
 	 * @throws \Exception
 	 * @throws QCallerException
 	 */
 	public function RenderFormGroup($blnDisplayOutput = true) {
+		if ($this instanceof \QTextBox ||
+			$this instanceof \QListBox) {
+
+			$this->AddCssClass (Bootstrap::FormControl); // make sure certain controls get a form control class
+		}
+
 		$this->blnUseWrapper = true;	// always use wrapper, because its part of the form group
-		$this->GetWrapperStyler()->AddCssClass('form-group');
+		$this->GetWrapperStyler()->AddCssClass(Bootstrap::FormGroup);
 
 		$this->RenderHelper(func_get_args(), __FUNCTION__);
 

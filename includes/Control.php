@@ -28,9 +28,7 @@ abstract class Control extends \QControlBase {
 		Bootstrap::LoadJS($this);
 
 		if ($this instanceof \QTextBoxBase ||
-			$this instanceof \QListBox ||
-			$this instanceof \QCheckBoxList ||
-			$this instanceof \QRadioButtonList) {
+			$this instanceof \QListBox) {
 			$this->AddCssClass (Bootstrap::FormControl);
 		}
 	}

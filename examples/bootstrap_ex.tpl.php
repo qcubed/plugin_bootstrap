@@ -31,6 +31,11 @@
 		Accordion
 	</h2>
 <?php $this->accordion->Render(); ?>
+	<h2>
+		Button Groups
+	</h2>
+<?php $this->lstRadio1->Render(); ?>
+<?php $this->lstRadio2->Render(); ?>
 
 
 <?php $this->RenderEnd(); ?>

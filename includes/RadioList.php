@@ -8,6 +8,8 @@
  *  ButtonModeJq	Display as separate radio buttons styled with bootstrap styling
  *  ButtonModeSet	Display as a button group
  *  ButtonModeList	Display as standard radio buttons with no structure
+ *
+ * @property-write string ButtonStyle Bootstrap::ButtonPrimary, ButtonSuccess, etc.
  */
 namespace QCubed\Plugin\Bootstrap;
 
@@ -21,6 +23,13 @@ class RadioList extends \QRadioButtonList {
 		parent::__construct($objParentObject, $strControlId);
 	}
 
+	/**
+	 * Used by drawing routines to render the attributes associated with this control.
+	 *
+	 * @param null $attributeOverrides
+	 * @param null $styleOverrides
+	 * @return string
+	 */
 	public function RenderHtmlAttributes($attributeOverrides = null, $styleOverrides = null)
 	{
 		if ($this->intButtonMode == \QRadioButtonList::ButtonModeSet) {
@@ -32,6 +41,10 @@ class RadioList extends \QRadioButtonList {
 	}
 
 
+	/**
+	 * Overrides the radio list get end script to prevent the default JQueryUi functionality.
+	 * @return string
+	 */
 	public function GetEndScript() {
 		$strScript = \QListControl::GetEndScript();	// bypass the QRadioButtonList end script
 		return $strScript;
@@ -52,6 +65,14 @@ class RadioList extends \QRadioButtonList {
 		return $strToReturn;
 	}
 
+	/**
+	 * Adds an active class to the selected item at initial draw time. The bootstrap javascript will do change this
+	 * as the user clicks on the various buttons.
+	 * 
+	 * @param $objItem
+	 * @param \QTagStyler $objItemAttributes
+	 * @param \QTagStyler $objLabelAttributes
+	 */
 	protected function OverrideItemAttributes ($objItem, \QTagStyler $objItemAttributes, \QTagStyler $objLabelAttributes) {
 		if ($objItem->Selected) {
 			$objLabelAttributes->AddCssClass("active");
@@ -64,15 +85,15 @@ class RadioList extends \QRadioButtonList {
 			case "ButtonStyle":
 				try {
 					$this->objItemStyle->RemoveCssClass($this->strButtonStyle);
-					$this->strButtonStyle = QType::Cast($mixValue, QType::String);
+					$this->strButtonStyle = \QType::Cast($mixValue, \QType::String);
 					$this->objItemStyle->AddCssClass($this->strButtonStyle);
 					break;
-				} catch (QInvalidCastException $objExc) {
+				} catch (\QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
 
-			case "ButtonMode":
+			case "ButtonMode":	// inherited
 				try {
 					if ($mixValue === self::ButtonModeSet) {
 						$this->objItemStyle->SetCssClass("btn");
@@ -80,7 +101,7 @@ class RadioList extends \QRadioButtonList {
 						parent::__set($strName, $mixValue);
 						break;
 					}
-				} catch (QInvalidCastException $objExc) {
+				} catch (\QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}

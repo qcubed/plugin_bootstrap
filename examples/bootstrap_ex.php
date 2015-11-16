@@ -9,10 +9,14 @@
 		/** @var  Bs\Accordion */
 		protected $accordion;
 
+		protected $lstRadio1;
+		protected $lstRadio2;
+
 		protected function Form_Create() {
 			$this->NavBar_Create();
 			$this->Carousel_Create();
 			$this->Accordion_Create();
+			$this->RadioList_Create();
 		}
 
 		protected function NavBar_Create() {
@@ -81,6 +85,17 @@
 					}
 					break;
 			}
+		}
+
+		protected function RadioList_Create() {
+			$this->lstRadio1 = new Bs\RadioList($this);
+			$this->lstRadio1->AddItems(["yes"=>"Yes", "no"=>"No"]);
+
+			$this->lstRadio2 = new Bs\RadioList($this);
+			$this->lstRadio2->AddItems(["yes"=>"Yes", "no"=>"No"]);
+			$this->lstRadio2->ButtonMode = QRadioButtonList::ButtonModeSet;
+			$this->lstRadio2->ButtonStyle = Bs\Bootstrap::ButtonPrimary;
+
 		}
 
 	}

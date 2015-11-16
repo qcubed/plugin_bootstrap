@@ -83,6 +83,11 @@ class ListGroup extends \QDataRepeater {
 		if (isset($params["id"])) {
 			$strId = $params["id"];
 		}
+		$strActionParam = $strId;
+		if (isset($params["action"])) {
+			$strActionParam = $params["action"];
+		}
+
 		$attributes = [];
 		if (isset($params["attributes"])) {
 			$attributes = $params["attributes"];
@@ -97,7 +102,7 @@ class ListGroup extends \QDataRepeater {
 		if ($this->blnSaveState && $this->strSelectedItemId !== null && $this->strSelectedItemId == $strId) {
 			$attributes["class"] .= " active";
 		}
-		$strLink = $this->prxButton->RenderAsLink($strLabel, $strId, $attributes, "a", false);
+		$strLink = $this->prxButton->RenderAsLink($strLabel, $strActionParam, $attributes, "a", false);
 
 		return $strLink;
 	}

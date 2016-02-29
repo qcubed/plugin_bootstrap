@@ -448,6 +448,11 @@ abstract class Bootstrap {
 	const ClearFix = 'clearfix';
 	const TextHide = 'text-hide';
 
+	/** Modal */
+	const ModalLarge = 'modal-lg';
+	const ModalSmall = 'modal-sm';
+
+
 
 
 	/** Utility methods */

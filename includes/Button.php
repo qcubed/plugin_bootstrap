@@ -23,13 +23,20 @@ class Button extends \QButton {
 		$this->AddCssClass($this->strButtonStyle);
 	}
 
+	public function SetSizeClass($strSizeClass) {
+		$this->RemoveCssClass($this->strButtonStyle);
+		$this->strButtonSize = QType::Cast ($strSizeClass, QType::String);
+		$this->AddCssClass($this->strButtonSize);
+	}
+
 	public function __set($strName, $mixValue) {
 		switch ($strName) {
 			case "StyleClass":	// One of Bootstrap::ButtonDefault, ButtonPrimary, ButtonSuccess, ButtonInfo, ButtonWarning, ButtonDanger
+				$this->SetStyleClass($mixValue);
 				break;
 
 			case "SizeClass": // One of Bootstrap::ButtonLarge, ButtonMedium, ButtonSmall, ButtonExtraSmall
-				$this->SetStyleClass($mixValue);
+				$this->SetSizeClass($mixValue);
 				break;
 
 			case "Glyph": // One of the glyph icons

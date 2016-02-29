@@ -7,12 +7,12 @@ namespace QCubed\Plugin\Bootstrap;
  */
 
 class NavbarItem extends \QHListItem {
-	protected $strAnchor = '#';  // make sure we get a default anchor for attaching clicks
-
 	public function __construct($strText = '', $strValue = null, $strAnchor = null) {
 		parent::__construct ($strText, $strValue);
 		if ($strAnchor) {
 			$this->strAnchor = $strAnchor;
+		} else {
+			$this->strAnchor = '#'; // need a default for attaching clicks and correct styling.
 		}
 	}
 

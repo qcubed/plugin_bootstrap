@@ -12,11 +12,14 @@
 		protected $lstRadio1;
 		protected $lstRadio2;
 
+		protected $lstPlain;
+
 		protected function Form_Create() {
 			$this->NavBar_Create();
 			$this->Carousel_Create();
 			$this->Accordion_Create();
 			$this->RadioList_Create();
+			$this->Dropdowns_Create();
 		}
 
 		protected function NavBar_Create() {
@@ -97,6 +100,19 @@
 			$this->lstRadio2->ButtonStyle = Bs\Bootstrap::ButtonPrimary;
 
 		}
+
+		protected function Dropdowns_Create() {
+			$selItems = [
+				new Bs\DropdownItem("First"),
+				new Bs\DropdownItem("Second"),
+				new Bs\DropdownItem("Third")
+
+			];
+			$this->lstPlain = new Bs\Dropdown($this);
+			$this->lstPlain->Text = "Plain";
+			$this->lstPlain->AddItems($selItems);
+		}
+
 
 	}
 

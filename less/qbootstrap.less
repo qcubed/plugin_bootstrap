@@ -23,6 +23,30 @@
     .checkbox {
       margin-top: 7px;
     }
+
+    .row {
+      .form-group .btn-group {
+        display:inline-block;
+      }
+    }
+
+  }
+}
+
+.row {
+  .form-group .btn-group {
+    display:block;
+    // This appears to be a bootstrap bug. By floating the labels, bootstrap gives them no height, causing problems
+    // for the following item. The below should fix that.
+    .btn {
+      float:none;
+      display:inline-block;
+      margin-right:0;
+
+    }
+    .btn+.btn {
+      margin-left: -5px;
+    }
   }
 }
 

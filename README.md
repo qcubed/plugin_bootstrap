@@ -26,6 +26,29 @@ you should change the first line to:
 abstract class QControl extends QCubed\Plugin\Bootstrap\Control {
 ```
 
+### __BOOTSTRAP_JS__
+The default mechanism included in this plugin only loads the bootstrap.js file on forms using the plugin widgets that
+need it. If you are hand-coding some bootstrap forms that also need bootstrap.js, you should do both of the following to avoid
+multiple bootstrap.js files being loaded:
+
+1) Define __BOOTSTRAP_JS__ in your configuration.inc.php file and point it to your desired bootstrap js file as so:
+```
+	define ('__BOOTSTRAP_JS__', __VENDOR_ASSETS__ . '/twbs/bootstrap/dist/js/bootstrap.js'); (or bootstrap.min.js if you prefer)
+```
+2) Either add this file to your footer.inc.php file like this:
+```
+	<script type="text/javascript" src="<?php echo(__BOOTSTRAP_JS__); ?>"></script>
+```
+or add it to the list of auto-loaded javascript forms in your QForm.class.php file like this:
+```
+	protected function GetFormJavaScripts() {
+		$scripts = parent::GetFormJavaScripts();
+		$scripts[] = __BOOTSTRAP_JS__;
+		return $scripts;
+	}
+
+```
+
 ## Usage
 
 See the examples pages for details. The main functionality includes:

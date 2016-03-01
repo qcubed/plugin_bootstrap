@@ -523,7 +523,15 @@ abstract class Bootstrap {
 	 * Load the javascript files required for bootstrap compatibility with qcubed
 	 */
 	public static function LoadJS($objControl) {
-		$objControl->AddJavascriptFile(__VENDOR_ASSETS__. '/twbs/bootstrap/dist/js/bootstrap.min.js');
+		/**
+		 * Define __BOOTSRAP_JS__ to handle your own loading of the bootstrap js files. Bootstrap includes a minimized version
+		 * and a non-minimized version. Also, if you are using bootstrap on forms that do not include the bootstrap widgets
+		 * in this plugin, then the code below will not be executed to load the bootstrap js file on those forms. You
+		 * should include it in your list of QForm files to auto load.
+		 */
+		if (!defined("__BOOTSTRAP_JS__")) {
+			$objControl->AddJavascriptFile(__VENDOR_ASSETS__. '/twbs/bootstrap/dist/js/bootstrap.min.js');
+		}
 		$objControl->AddPluginJavascriptFile('bootstrap', 'qshim.js'); // for jquery ui compatibility
 
 	}

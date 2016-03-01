@@ -288,18 +288,12 @@ trait ControlTrait {
 
 			case "Display":
 				parent::__set($strName, $mixValue);
-				if ($this->blnUseWrapper) {
-					if ($this->blnDisplay) {
-						$this->RemoveWrapperCssClass(Bootstrap::Hidden);
-					} else {
-						$this->AddWrapperCssClass(Bootstrap::Hidden);
-					}
+				if ($this->blnDisplay) {
+					$this->RemoveWrapperCssClass(Bootstrap::Hidden);
+					$this->RemoveCssClass(Bootstrap::Hidden);
 				} else {
-					if ($this->blnDisplay) {
-						$this->RemoveCssClass(Bootstrap::Hidden);
-					} else {
-						$this->AddCssClass(Bootstrap::Hidden);
-					}
+					$this->AddWrapperCssClass(Bootstrap::Hidden);
+					$this->AddCssClass(Bootstrap::Hidden);
 				}
 				break;
 

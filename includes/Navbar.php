@@ -4,7 +4,7 @@ namespace QCubed\Plugin\Bootstrap;
 
 include_once("Bootstrap.php");
 
-use \QType, \QApplication, \QHtml;
+use \QType, \QApplication;
 
 class Navbar_SelectEvent extends \QEvent {
 	const EventName = 'bsmenubarselect';
@@ -101,7 +101,7 @@ TMPL;
 			default:
 				try {
 					return parent::__get($strText);
-				} catch (QCallerException $objExc) {
+				} catch (\QCallerException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
@@ -115,7 +115,7 @@ TMPL;
 					// Bootstrap::ContainerFluid or Bootstrap::Container
 					$this->strContainerClass = QType::Cast($mixValue, QType::String);
 					break;
-				} catch (QInvalidCastException $objExc) {
+				} catch (\QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
@@ -124,7 +124,7 @@ TMPL;
 				try {
 					$this->strHeaderText = QType::Cast($mixValue, QType::String);
 					break;
-				} catch (QInvalidCastException $objExc) {
+				} catch (\QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
@@ -133,7 +133,7 @@ TMPL;
 				try {
 					$this->strHeaderAnchor = QType::Cast($mixValue, QType::String);
 					break;
-				} catch (QInvalidCastException $objExc) {
+				} catch (\QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
@@ -143,7 +143,7 @@ TMPL;
 				try {
 					$this->strSelectedId = QType::Cast($mixValue, QType::String);
 					break;
-				} catch (QInvalidCastException $objExc) {
+				} catch (\QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
@@ -155,7 +155,7 @@ TMPL;
 					$this->AddCssClass($mixValue);
 					$this->strStyleClass = $mixValue;
 					break;
-				} catch (QInvalidCastException $objExc) {
+				} catch (\QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
@@ -164,7 +164,7 @@ TMPL;
 			default:
 				try {
 					parent::__set($strText, $mixValue);
-				} catch (QCallerException $objExc) {
+				} catch (\QCallerException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}

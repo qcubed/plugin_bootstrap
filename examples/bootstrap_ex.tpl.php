@@ -36,6 +36,11 @@
 	</h2>
 <?php $this->lstRadio1->Render(); ?>
 <?php $this->lstRadio2->Render(); ?>
+	<h2>
+		Dropdowns
+	</h2>
+
+<?php $this->drpPlain->Render(); ?>
 
 
 <?php $this->RenderEnd(); ?>

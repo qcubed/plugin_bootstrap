@@ -1,0 +1,222 @@
+/**
+ * Helper to implement a modal via bootstrap.
+ *
+ * Uses the jQuery UI widget mechanism to provide object oriented functionality.
+ *
+ * Assumes that a wrapper is being used on the control. This is required for correct functioning.
+ */
+
+jQuery(function( $, undefined ) {
+    $.widget( "qcubed.bsModal", {
+        options: {
+            fade:    true,          // Modal transition
+            hasCloseButton: true,   // Has a close button
+            title: "",              // Title text
+            headerClasses: "",      // Classes to put in the header. A good one is bg-primary, bg-success, etc.
+            buttons: null,          // Array of button options
+            size: null,             // The modal-lg or modal-sm option
+            backdrop: null,         // The backdrop option that can be specified in the initialization options.
+                                    // Boolean, or the string "static", which means do not allow closing by clicking outside of dialog.
+            keyboard: true,         // Boolean, whether to allow ESC key to close
+            show: false             // Boolean, whether to show immediately upon initialization
+        },
+        _create: function() {
+            var self = this,
+                $control = this.element,
+                id = $control.attr('id'),
+                wrapperId = id + "_ctl",
+                $wrapper = $('#' + wrapperId);
+
+            // make the wrapper into the bs modal wrapper
+            $wrapper.addClass('modal');
+            if (this.options.fade) {
+                $wrapper.addClass('fade');
+            }
+
+            $wrapper.attr('tabIndex', -1);
+            $wrapper.attr('role', 'dialog');
+
+            var $md = $('<div class="modal-dialog" role="document"></div>');
+            if (this.options.size) {
+                $md.addClass(this.options.size);
+            }
+            var $mc = $('<div class="modal-content"></div>');
+            var $mh = $('<div class="modal-header"></div>');
+            var hasHeader = false;
+            if (this.options.hasCloseButton) {
+                $mh.append('<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+                hasHeader = true;
+            }
+            if (this.options.title) {
+                $mh.append('<h4 class="modal-title" id="gridSystemModalLabel">' + this.options.title + '</h4>');
+                hasHeader = true;
+            }
+            if (this.options.headerClasses) {
+                $mh.addClass(this.options.headerClasses);
+            }
+            $control.addClass('modal-body');
+
+            var $mf = $('<div class="modal-footer"></div>');
+            if (this.options.buttons) {
+                $.each(this.options.buttons, function(i, objButton) {
+                    var buttonStyle = 'default';
+                    var $b = $('<button type="button">' + objButton.text + '</button>');
+                    if (objButton.isPrimary) {
+                        $b.attr('data-primary', 1);
+                    }
+
+                    if (objButton.style) {
+                        buttonStyle = objButton.style;
+                    }
+                    $b.addClass('btn-' + buttonStyle);
+                    $b.attr('data-btnid', objButton.id);
+
+                    if (objButton.attr) {
+                        $b.attr(objButton.attr);
+                    }
+
+                    $b.addClass('btn'); // do this after attr in case attr includes a class attribute
+
+                    // create an action for the button
+                    if (objButton.close) {
+                        // button click closes the dialog
+                        $b.attr("data-dismiss", "modal");
+                    }
+
+                    objButton.instance = self;
+
+                    if (objButton.click === false) {
+                        // do nothing
+                    }
+                    else if (objButton.click) {
+                        $b.click(objButton.click);
+                    }
+                    else {
+                        $b.click(objButton, self._buttonClick);
+                    }
+
+                    $mf.append($b);
+                });
+            }
+
+            // makes sure a return key fires the default button if there is one
+            $control.on ("keydown", "input,select", function(event) {
+                if (event.which === 13) {
+                    var b = $(this).closest("[role=\'dialog\']").find("button[data-primary=1]");
+                    if (b) {
+                        b[0].click();
+                    }
+                    event.preventDefault();
+                }
+            });
+
+
+            // put it all together
+            $md.append($mc);
+            if (hasHeader) {
+                $mc.append($mh);
+            }
+            $mc.append($control);
+            if (this.options.buttons) {
+                $mc.append($mf);
+            }
+            $wrapper.append($md);
+
+            // initialize the modal
+            var options = {};
+            if (this.options.keyboard) {
+                options.keyboard = this.options.keyboard;
+            }
+            if (this.options.backdrop) {
+                options.backdrop = this.options.backdrop;
+            }
+            options.show = this.options.show;
+            $wrapper.modal(options);
+
+            $wrapper.on('shown.bs.modal', function (e) {
+                qcubed.recordControlModification(id, "_IsOpen", true);
+            });
+            $wrapper.on('hidden.bs.modal', function (e) {
+                qcubed.recordControlModification(id, "_IsOpen", false);
+            });
+        },
+        open: function() {
+            var $control = this.element,
+                id = $control.attr('id'),
+                wrapperId = id + "_ctl",
+                $wrapper = $('#' + wrapperId);
+
+            $wrapper.modal("show");
+        },
+        close: function() {
+            var $control = this.element,
+                id = $control.attr('id'),
+                wrapperId = id + "_ctl",
+                $wrapper = $('#' + wrapperId);
+
+            $wrapper.modal("hide");
+
+        },
+        showButton: function(btnId, visible) {
+            var $control = this.element,
+                $button = $control.find("button[data-btnid=" + btnId + "]");
+
+            if ($button) {
+                if (visible) {
+                    $button.show();
+                } else {
+                    $button.hide();
+                }
+            }
+        },
+        setButtonCss: function(btnId, css) {
+            var $control = this.element,
+                $button = $control.find("button[data-btnid=" + btnId + "]");
+
+            if ($button) {
+                $button.css(css);
+            }
+        },
+        /**
+         * Uses bootstrap to perform a confirm message.
+         * @param string message
+         * @param function success The function to execute if the user confirms the message. Otherwise, no function is executed.
+         */
+        confirm: function(message, success) {
+            var $form = $(this.element).closest('form');
+            var $w = $('<div id="bsConfirm_ctl"></div>');
+            var $m = $('<div id="bsConfirm">' + message + '</div>');
+            $w.append($m);
+            $form.append($w);
+            $m.bsModal({hasCloseButton: false, backdrop: "static", title: " ", headerClasses: "bg-warning",
+                buttons:[
+                    {text:"No", close:true, click: false},
+                    {text:"Yes", close:true, click: success}
+                ]});
+            $m.bsModal("open");
+            $w.on('hidden.bs.modal', function () {
+                $w.remove();
+            });
+        },
+        _buttonClick: function(event) {
+            var objButton = event.data;
+            var self = objButton.instance;
+
+            if (objButton.confirm) {
+                self.confirm(objButton.confirm, function() {self._recordButtonClick(event);});
+            } else {
+                self._recordButtonClick(event);
+            }
+        },
+        _recordButtonClick: function(event) {
+            var objButton = event.data;
+            var self = objButton.instance;
+            var controlId = self.element.attr('id');
+
+            qcubed.recordControlModification(controlId, "_ClickedButton", objButton.id);
+            self.element.trigger("QDialog_Button", objButton.id);
+        }
+
+    });
+
+});

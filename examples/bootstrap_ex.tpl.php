@@ -40,7 +40,7 @@
 		Dropdowns
 	</h2>
 
-<?php $this->drpPlain->Render(); ?>
+<?php $this->lstPlain->Render(); ?>
 
 
 <?php $this->RenderEnd(); ?>

@@ -155,6 +155,7 @@ class Modal extends QPanel
 		parent::__construct($objParentObject, $strControlId);
 		$this->blnVisible = false;
 		$this->mixCausesValidation = $this;
+		Bootstrap::LoadJS($this);
 		$this->AddPluginJavascriptFile('bootstrap', 'qc.bs.modal.js');
 	}
 

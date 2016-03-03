@@ -85,7 +85,7 @@ class Nav extends \QHListControl {
 	 * @param \QHListItem $objItem
 	 * @return string
 	 */
-	protected function GetItemText (\QHListItem $objItem) {
+	protected function GetItemText ($objItem) {
 		$strHtml = QApplication::HtmlEntities($objItem->Text);
 
 		if ($strAnchor = $objItem->Anchor) {

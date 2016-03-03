@@ -16,19 +16,19 @@ class NavbarList extends \QHListControl {
 	/**
 	 * Return the text html of the item.
 	 *
-	 * @param QListItem $objItem
+	 * @param mixed $objItem
 	 * @return string
 	 */
-	protected function GetItemText (\QHListItem $objItem) {
+	protected function GetItemText ($objItem) {
 		return $objItem->GetItemText();	// redirect to subclasses of item
 	}
 
 	/**
 	 * Return the attributes for the sub tag that wraps the item tags
-	 * @param QListItem $objItem
-	 * @return null|array|string
+	 * @param mixed $objItem
+	 * @return array|null|string
 	 */
-	public function GetSubTagAttributes(\QHListItem $objItem) {
+	public function GetSubTagAttributes($objItem) {
 		return $objItem->GetSubTagAttributes();
 	}
 

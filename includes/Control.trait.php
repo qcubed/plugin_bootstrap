@@ -217,8 +217,8 @@ trait ControlTrait {
 
 	public function ValidationReset() {
 		if ($this->strValidationState) {
-			$this->strValidationState = null;
 			$this->RemoveWrapperCssClass($this->strValidationState);
+			$this->strValidationState = null;
 		}
 		parent::ValidationReset();
 	}
@@ -228,19 +228,23 @@ trait ControlTrait {
 	 * the wrapper class. Which is fine, since its faster.
 	 */
 	public function ReinforceValidationState() {
+
+		if ($this->blnUseWrapper &&
+				empty($this->GetChildControls(false))) {	// don't apply states to parent controls
+			if ($this->strValidationError) {
+				$this->AddWrapperCssClass(Bootstrap::HasError);
+				$this->strValidationState = Bootstrap::HasError;
+			}
+			elseif ($this->strWarning) {
+				$this->AddWrapperCssClass(Bootstrap::HasWarning);
+				$this->strValidationState = Bootstrap::HasWarning;
+			}
+			else {
+				$this->AddWrapperCssClass(Bootstrap::HasSuccess);
+				$this->strValidationState = Bootstrap::HasSuccess;
+			}
+		}
 		// TODO: Classes that don't use a wrapper
-		if ($this->strValidationError) {
-			$this->AddWrapperCssClass(Bootstrap::HasError);
-			$this->strValidationState = Bootstrap::HasError;
-		}
-		elseif ($this->strWarning) {
-			$this->AddWrapperCssClass(Bootstrap::HasWarning);
-			$this->strValidationState = Bootstrap::HasWarning;
-		}
-		else {
-			$this->AddWrapperCssClass(Bootstrap::HasSuccess);
-			$this->strValidationState = Bootstrap::HasSuccess;
-		}
 	}
 
 

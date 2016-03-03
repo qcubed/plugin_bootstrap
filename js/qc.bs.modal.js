@@ -3,7 +3,7 @@
  *
  * Uses the jQuery UI widget mechanism to provide object oriented functionality.
  *
- * Assumes that a wrapper is being used on the control. This is required for correct functioning.
+ * Assumes that a wrapper is being used on the control and is set up with a modal class. This is required for correct functioning.
  */
 
 jQuery(function( $, undefined ) {
@@ -28,13 +28,6 @@ jQuery(function( $, undefined ) {
                 $wrapper = $('#' + wrapperId);
 
             // make the wrapper into the bs modal wrapper
-            $wrapper.addClass('modal');
-            if (this.options.fade) {
-                $wrapper.addClass('fade');
-            }
-
-            $wrapper.attr('tabIndex', -1);
-            $wrapper.attr('role', 'dialog');
 
             var $md = $('<div class="modal-dialog" role="document"></div>');
             if (this.options.size) {

@@ -19,7 +19,7 @@
 
 namespace QCubed\Plugin\Bootstrap;
 
-use \QEvent, \QDialog, \QApplication, \QPanel, \QJsPriority, \QType;
+use \QEvent, \QDialog, \QApplication, \QPanel, \QJsPriority, \QType, \QInvalidCastException, \QCallerException;
 
 /**
  * Class Modal_ShowEvent
@@ -88,8 +88,10 @@ class Modal_HiddenEvent extends QEvent {
  *
  * You do not need to draw the dialog. It will automatically be drawn for you.
  *
- * Since QDialog is a descendant of QPanel, you can do anything you can to a normal QPanel,
+ * Since Modal is a descendant of QPanel, you can do anything you can to a normal QPanel,
  * including add QControls and use a template. When you want to hide the dialog, call <code>HideDialogBox()</code>
+ *
+ * However, do not mark the dialog's wrapper as modified while it is being shown. This will cause redraw problems.
  *
  * @property boolean $AutoOpen Automatically opens the dialog when its drawn.
  * @property boolean $Show Synonym of AutoOpen.
@@ -111,7 +113,7 @@ class Modal_HiddenEvent extends QEvent {
 	
 class Modal extends QPanel
 {
-	/** @var boolmake sure the modal gets rendered */
+	/** @var bool make sure the modal gets rendered */
 	protected $blnAutoRender = true;
 
 	/** The control id to use for the reusable global alert dialog. */
@@ -153,10 +155,15 @@ class Modal extends QPanel
 	 */
 	public function __construct($objParentObject, $strControlId = null) {
 		parent::__construct($objParentObject, $strControlId);
-		$this->blnVisible = false;
 		$this->mixCausesValidation = $this;
 		Bootstrap::LoadJS($this);
 		$this->AddPluginJavascriptFile('bootstrap', 'qc.bs.modal.js');
+
+		/* Setup wrapper to prevent flash drawing of unstyled dialog. */
+		$objWrapperStyler = $this->GetWrapperStyler();
+		$objWrapperStyler->AddCssClass('modal fade');
+		$objWrapperStyler->SetHtmlAttribute('tabIndex', -1);
+		$objWrapperStyler->SetHtmlAttribute('role', 'dialog');
 	}
 
 	/**
@@ -381,7 +388,6 @@ class Modal extends QPanel
 	 * this case, you will need to detect the button by adding a QDialog_ButtonEvent. You will also be responsible for calling "Close()" on
 	 * the dialog after detecting a button.
 	 *
-	 * @param QForm $objForm	// The parent object, which should always be the form itself.
 	 * @param string $strMessage		// The message
 	 * @param string|string[]|null $strButtons
 	 * @param string|null $strControlId
@@ -421,11 +427,8 @@ class Modal extends QPanel
 	/**
 	 * An alert is closing, so we remove the dialog from the dom.
 	 *
-	 * @param $strFormId
-	 * @param $strControlId
-	 * @param $strParameter
 	 */
-	public function Alert_Close($strFormId, $strControlId, $strParameter) {
+	public function Alert_Close() {
 		$this->Form->RemoveControl($this->ControlId);
 		QApplication::ExecuteControlCommand($this->getJqControlId(), 'remove');
 	}
@@ -462,12 +465,34 @@ class Modal extends QPanel
 	}
 
 	/**
+	 * Override to prevent validation state on the dialog itself.
+	 */
+	public function ReinforceValidationState()
+	{
+		// do nothing at the dialog level
+	}
+
+	/**
+	 * Override to prevent the entire dialog from being redrawn while it is open. It can't do that. Mark
+	 * individual items as modified instead.
+	 */
+	public function MarkAsWrapperModified()
+	{
+		if ($this->blnIsOpen) {
+			// do nothing
+
+		} else {
+			parent::MarkAsWrapperModified();
+		}
+	}
+
+	/**
 	 * PHP magic method
 	 *
 	 * @param string $strName
 	 * @param string $mixValue
 	 *
-	 * @throws Exception|QCallerException|QInvalidCastException
+	 * @throws \Exception|\QCallerException|\QInvalidCastException
 	 */
 	public function __set($strName, $mixValue) {
 		switch ($strName) {
@@ -483,7 +508,12 @@ class Modal extends QPanel
 			case '_IsOpen': // Internal only, to detect when dialog has been opened or closed.
 				try {
 					$this->blnIsOpen = QType::Cast($mixValue, QType::Boolean);
-					$this->blnAutoOpen = $this->blnIsOpen;  // in case it gets redrawn
+
+					// Setup wrapper style in case dialog is redrawn while it is open.
+					if (!$this->blnIsOpen) {
+						// dialog is closing, so reset all validation states.
+						$this->Form->ResetValidationStates();
+					}
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
 					throw $objExc;
@@ -496,7 +526,6 @@ class Modal extends QPanel
 			case 'Show':	// the Bootstrap name of this option
 				try {
 					$this->blnAutoOpen = QType::Cast($mixValue, QType::Boolean);
-					$this->blnModified = true;	// redraw
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -528,7 +557,11 @@ class Modal extends QPanel
 			case 'Fade' :
 				try {
 					$this->blnFade = QType::Cast($mixValue, QType::Boolean);
-					$this->blnModified = true;	// redraw
+					if ($this->blnFade) {
+						$this->GetWrapperStyler()->AddCssClass('fade');
+					} else {
+						$this->GetWrapperStyler()->RemoveCssClass('fade');
+					}
 					break;
 				} catch (QInvalidCastException $objExc) {
 					$objExc->IncrementOffset();
@@ -608,7 +641,7 @@ class Modal extends QPanel
 	 * @param string $strName
 	 *
 	 * @return mixed
-	 * @throws Exception|QCallerException
+	 * @throws \Exception|\QCallerException
 	 */
 	public function __get($strName) {
 		switch ($strName) {

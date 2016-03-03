@@ -24,12 +24,16 @@
 
 	<h2>Horizontal Bootstrap Form</h2>
 	<div class="form-horizontal">
-		<?php $this->firstName->RenderFormGroup(true, ['LabelCssClass' => 'col-sm-2', 'HorizontalClass' => 'col-sm-10']); ?>
-		<?php $this->lastName->RenderFormGroup(true, ['LabelCssClass' => 'col-sm-2', 'HorizontalClass' => 'col-sm-10']); ?>
-		<?php $this->street->RenderFormGroup(true, ['LabelCssClass' => 'col-sm-2', 'HorizontalClass' => 'col-sm-10']); ?>
-		<?php $this->city->RenderFormGroup(true, ['LabelCssClass' => 'col-sm-2', 'HorizontalClass' => 'col-sm-10']); ?>
-		<?php $this->state->RenderFormGroup(true, ['LabelCssClass' => 'col-sm-2', 'HorizontalClass' => 'col-sm-10']); ?>
-		<?php $this->zip->RenderFormGroup(true, ['LabelCssClass' => 'col-sm-2', 'HorizontalClass' => 'col-sm-10']); ?>
+		<?php
+		// Note the use of the "+" plus sign in front of the LabelCssClass. That means to add the class to the other classes. Without
+		// the plus, it would replace the built-in classes, and you would get some drawing errors.
+		?>
+		<?php $this->firstName->RenderFormGroup(true, ['LabelCssClass' => '+ col-sm-2', 'HorizontalClass' => 'col-sm-10']); ?>
+		<?php $this->lastName->RenderFormGroup(true, ['LabelCssClass' => '+ col-sm-2', 'HorizontalClass' => 'col-sm-10']); ?>
+		<?php $this->street->RenderFormGroup(true, ['LabelCssClass' => '+ col-sm-2', 'HorizontalClass' => 'col-sm-10']); ?>
+		<?php $this->city->RenderFormGroup(true, ['LabelCssClass' => '+ col-sm-2', 'HorizontalClass' => 'col-sm-10']); ?>
+		<?php $this->state->RenderFormGroup(true, ['LabelCssClass' => '+ col-sm-2', 'HorizontalClass' => 'col-sm-10']); ?>
+		<?php $this->zip->RenderFormGroup(true, ['LabelCssClass' => '+ col-sm-2', 'HorizontalClass' => 'col-sm-10']); ?>
 
 		<?php $this->button->RenderFormGroup(true, ['HorizontalClass' => 'col-sm-10 col-sm-offset-2']); ?>
 

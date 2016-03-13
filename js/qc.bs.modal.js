@@ -181,11 +181,13 @@ jQuery(function( $, undefined ) {
             var $m = $('<div id="bsConfirm">' + message + '</div>');
             $w.append($m);
             $form.append($w);
-            $m.bsModal({hasCloseButton: false, backdrop: "static", title: " ", headerClasses: "bg-warning",
-                buttons:[
-                    {text:"No", close:true, click: false},
-                    {text:"Yes", close:true, click: success}
-                ]});
+            $m.bsModal({
+                hasCloseButton: false, backdrop: "static", title: " ", headerClasses: "bg-warning",
+                buttons: [
+                    {text: "No", close: true, click: false},
+                    {text: "Yes", close: true, click: success}
+                ]
+            });
             $m.bsModal("open");
             $w.on('hidden.bs.modal', function () {
                 $w.remove();
@@ -196,7 +198,9 @@ jQuery(function( $, undefined ) {
             var self = objButton.instance;
 
             if (objButton.confirm) {
-                self.confirm(objButton.confirm, function() {self._recordButtonClick(event);});
+                self.confirm(objButton.confirm, function () {
+                    self._recordButtonClick(event);
+                });
             } else {
                 self._recordButtonClick(event);
             }
@@ -208,8 +212,10 @@ jQuery(function( $, undefined ) {
 
             qcubed.recordControlModification(controlId, "_ClickedButton", objButton.id);
             self.element.trigger("QDialog_Button", objButton.id);
+        },
+        _destroy: function () {
+            this.close(); // there currently is no tear down function for modals. v4 of bootstrap is supposed to have one.
+            this._super();
         }
-
     });
-
 });

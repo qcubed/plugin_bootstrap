@@ -2,11 +2,20 @@
 
 namespace QCubed\Plugin\Bootstrap;
 
-// If you are compiling your own bootstrap css file, point to it with the __BOOTSTRAP_CSS__ define. Otherwise it will take
-// the default one from the bootstrap distribution.
-
+/**
+ * If you are compiling your own bootstrap css file, point to it with the __BOOTSTRAP_CSS__ define. Otherwise it will take
+ * the default one from the bootstrap distribution.
+ */
 if (!defined ('__BOOTSTRAP_CSS__')) {
 	define ('__BOOTSTRAP_CSS__', __VENDOR_ASSETS__. '/twbs/bootstrap/dist/css/bootstrap.min.css');
+}
+
+/**
+ * Define __BOOTSTRAP_JS__ to handle your own loading of the bootstrap js files. Bootstrap includes a minimized version
+ * and a non-minimized version.
+ */
+if (!defined ('__BOOTSTRAP_JS__')) {
+	define ('__BOOTSTRAP_JS__', __VENDOR_ASSETS__. '/twbs/bootstrap/dist/js/bootstrap.min.js');
 }
 
 
@@ -520,18 +529,16 @@ abstract class Bootstrap {
 	}
 
 	/**
-	 * Load the javascript files required for bootstrap compatibility with qcubed
+	 * Load the javascript files required for bootstrap compatibility with qcubed. This should be called by bootstrap
+	 * widgets that depend on the bootstrap javascript.
+	 *
+	 * If you are using bootstrap on forms that do not include the bootstrap widgets
+	 * in this plugin, then the code below will not be executed to load the bootstrap js file on those forms. You
+	 * should instead include both files below in your QForm javascript files to auto load by overloading
+	 * GetFormJavaScripts in your QForm class.
 	 */
 	public static function LoadJS($objControl) {
-		/**
-		 * Define __BOOTSRAP_JS__ to handle your own loading of the bootstrap js files. Bootstrap includes a minimized version
-		 * and a non-minimized version. Also, if you are using bootstrap on forms that do not include the bootstrap widgets
-		 * in this plugin, then the code below will not be executed to load the bootstrap js file on those forms. You
-		 * should include it in your list of QForm files to auto load.
-		 */
-		if (!defined("__BOOTSTRAP_JS__")) {
-			$objControl->AddJavascriptFile(__VENDOR_ASSETS__. '/twbs/bootstrap/dist/js/bootstrap.min.js');
-		}
+		$objControl->AddJavascriptFile(__BOOTSTRAP_JS__);
 		$objControl->AddPluginJavascriptFile('bootstrap', 'qshim.js'); // for jquery ui compatibility
 
 	}

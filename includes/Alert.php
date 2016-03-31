@@ -117,6 +117,7 @@ class Alert extends \QPanel {
 					$this->blnModified = true;
 					if ($blnDismissable) {
 						$this->AddCssClass(Bootstrap::AlertDismissable);
+						Bootstrap::LoadJS($this);
 					} else {
 						$this->RemoveCssClass(Bootstrap::AlertDismissable);
 					}

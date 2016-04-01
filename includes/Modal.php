@@ -76,7 +76,7 @@ class Modal_HiddenEvent extends QEvent {
  *
  * In your Form_Create():
  * <code>
- * $this->dlg = new BS\Dialog($this);
+ * $this->dlg = new BS\Modal($this);
  * $this->dlg->Text = 'Show this on the dialog.'
  * $this->dlg->AddButton ('OK', 'ok', false, true, null, ['data-dismiss'='modal']);
  * </code>

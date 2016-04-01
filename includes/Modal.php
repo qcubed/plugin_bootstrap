@@ -157,6 +157,7 @@ class Modal extends QPanel
 		parent::__construct($objParentObject, $strControlId);
 		$this->mixCausesValidation = $this;
 		Bootstrap::LoadJS($this);
+		$this->AddPluginCssFile($this, __BOOTSTRAP_CSS__);
 		$this->AddPluginJavascriptFile('bootstrap', 'qc.bs.modal.js');
 
 		/* Setup wrapper to prevent flash drawing of unstyled dialog. */
@@ -211,7 +212,7 @@ class Modal extends QPanel
 	public function GetEndScript() {
 		QApplication::ExecuteControlCommand($this->GetJqControlId(), "off", QJsPriority::High);
 		$jqOptions = $this->MakeJqOptions();
-		QApplication::ExecuteControlCommand($this->ControlId, $this->GetJqSetupFunction(), $jqOptions);
+		QApplication::ExecuteControlCommand($this->ControlId, $this->GetJqSetupFunction(), $jqOptions, QJsPriority::High);
 
 		return parent::GetEndScript();
 	}
@@ -623,6 +624,10 @@ class Modal extends QPanel
 					$objExc->IncrementOffset();
 					throw $objExc;
 				}
+
+			case 'Modal':
+				// stub, does nothing
+				break;
 
 			default:
 				try {

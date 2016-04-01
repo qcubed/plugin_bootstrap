@@ -151,7 +151,7 @@ jQuery(function( $, undefined ) {
 
         },
         showButton: function(btnId, visible) {
-            var $control = this.element,
+            var $control = $(this.element).parent(),
                 $button = $control.find("button[data-btnid=" + btnId + "]");
 
             if ($button) {
@@ -177,7 +177,7 @@ jQuery(function( $, undefined ) {
          */
         confirm: function(message, success) {
             var $form = $(this.element).closest('form');
-            var $w = $('<div id="bsConfirm_ctl"></div>');
+            var $w = $('<div id="bsConfirm_ctl" class="modal"></div>');
             var $m = $('<div id="bsConfirm">' + message + '</div>');
             $w.append($m);
             $form.append($w);

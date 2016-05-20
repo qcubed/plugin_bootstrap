@@ -67,7 +67,7 @@ class Nav extends \QHListControl {
 	 * @param \QHListItem $objItem
 	 * @return \QListItemStyle
 	 */
-	protected function GetItemStyler (\QHListItem $objItem) {
+	protected function GetItemStyler ($objItem) {
 		$objStyler = parent::GetItemStyler ($objItem);
 
 		//if no item is active, pick the first item in the list to be active

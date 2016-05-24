@@ -228,9 +228,9 @@ trait ControlTrait {
 	 * the wrapper class. Which is fine, since its faster.
 	 */
 	public function ReinforceValidationState() {
-
+		$objChildControls = $this->GetChildControls(false);
 		if ($this->blnUseWrapper &&
-				empty($this->GetChildControls(false))) {	// don't apply states to parent controls
+				count($objChildControls) == 0) {	// don't apply states to parent controls
 			if ($this->strValidationError) {
 				$this->AddWrapperCssClass(Bootstrap::HasError);
 				$this->strValidationState = Bootstrap::HasError;

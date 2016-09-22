@@ -79,6 +79,11 @@ class RadioList extends \QRadioButtonList {
 		}
 	}
 
+	protected function RefreshSelection() {
+		$this->MarkAsModified();
+	}
+
+
 	public function __set($strName, $mixValue) {
 		switch ($strName) {
 			// APPEARANCE

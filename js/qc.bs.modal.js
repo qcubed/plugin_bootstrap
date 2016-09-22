@@ -33,6 +33,10 @@ jQuery(function( $, undefined ) {
             if (this.options.size) {
                 $md.addClass(this.options.size);
             }
+
+            // allows capturing of enter key events
+            $md.attr('tabindex', -1);
+
             var $mc = $('<div class="modal-content"></div>');
             var $mh = $('<div class="modal-header"></div>');
             var hasHeader = false;
@@ -93,13 +97,14 @@ jQuery(function( $, undefined ) {
             }
 
             // makes sure a return key fires the default button if there is one
-            $control.on ("keydown", "input,select", function(event) {
-                if (event.which === 13) {
+            $control.parent().on ("keydown", function(event) {
+                if (event.which === 13 && !$(event.target).is('textarea')) {
                     var b = $(this).closest("[role=\'dialog\']").find("button[data-primary=1]");
-                    if (b) {
+                    if (b && b[0]) {
                         b[0].click();
                     }
                     event.preventDefault();
+                    return false;
                 }
             });
 
@@ -128,6 +133,14 @@ jQuery(function( $, undefined ) {
 
             $wrapper.on('shown.bs.modal', function (e) {
                 qcubed.recordControlModification(id, "_IsOpen", true);
+                // focus first element if possible, or whole dialog to capture return event
+                var obj = $control.find(':input:enabled:visible:first');
+                if (obj.length) {
+                    obj.focus();
+                } else {
+                    $md.focus(); // allows capturing of enter key events if no control is selected
+                }
+
             });
             $wrapper.on('hidden.bs.modal', function (e) {
                 qcubed.recordControlModification(id, "_IsOpen", false);

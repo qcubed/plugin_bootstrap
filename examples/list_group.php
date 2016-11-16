@@ -1,6 +1,6 @@
 <?php
 
-require('../../../framework/qcubed.inc.php');
+require('../../../qcubed/qcubed.inc.php');
 require('../includes/Control.trait.php');
 
 use QCubed\Plugin\Bootstrap as Bs;

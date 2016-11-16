@@ -1,5 +1,5 @@
 <?php
-	require_once('../../../framework/qcubed.inc.php');
+	require_once('../../../qcubed/qcubed.inc.php');
 
 	use QCubed\Plugin\Bootstrap as Bs;
 

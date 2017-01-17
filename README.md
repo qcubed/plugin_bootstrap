@@ -17,6 +17,12 @@ The default setting for this file is:
 ```
 If you are compiling your own custom version of the bootstrap css file, simply set that define to point to your own version.
 
+Remember you do have to include the css file in your templates:
+```
+	<link rel="stylesheet" href="<?= __BOOTSTRAP_CSS__ ?>" type="text/css" media="screen, projection, print" />
+```
+
+
 3) Point the base class to Bootstrap classes so that they add their functionality.
 
 In your project/includes/controls/QControl.class.php file, have your QControl inherit from the base class. For example,

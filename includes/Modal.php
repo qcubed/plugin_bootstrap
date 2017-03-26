@@ -119,7 +119,7 @@ class Modal extends QPanel
 	/** The control id to use for the reusable global alert dialog. */
 	const MessageDialogId = 'qAlertDialog';
 
-	/** @var bool default to auto open being false, since this would be a rare need, and dialogs are auto-rendered. */
+	/** @var bool default to auto open being false. */
 	protected $blnAutoOpen = false;
 	/** @var  string Id of last button clicked. */
 	protected $strClickedButtonId;
@@ -147,17 +147,29 @@ class Modal extends QPanel
 	protected $strSize;
 	/** @var  bool|string true or false whether to have an overlay backdrop, or the string "static", which means have a backdrop, and don't close when clicking outside of dialog. */
 	protected $mixBackdrop;
+	/** @var bool Whether to automatically remove the dialog from the form when it closes. */
+	protected $blnAutoRemove = false;
 
 	/**
 	 * Modal constructor.
 	 * @param \QControlBase|\QForm $objParentObject
 	 * @param string|null $strControlId
 	 */
-	public function __construct($objParentObject, $strControlId = null) {
+	public function __construct($objParentObject = null, $strControlId = null) {
+
+		if ($objParentObject === null) {
+			// The modal will be shown right away, and then when closed, removed from the form.
+			global $_FORM;
+			$objParentObject = $_FORM;	// The parent object should be the form. Prevents spurious redrawing.
+			$this->blnDisplay = true;
+			$this->blnAutoOpen = true;
+			$this->blnAutoRemove = true;
+		}
+
 		parent::__construct($objParentObject, $strControlId);
 		$this->mixCausesValidation = $this;
 		Bootstrap::LoadJS($this);
-		$this->AddPluginCssFile($this, __BOOTSTRAP_CSS__);
+		$this->AddCssFile(__BOOTSTRAP_CSS__);
 		$this->AddPluginJavascriptFile('bootstrap', 'qc.bs.modal.js');
 
 		/* Setup wrapper to prevent flash drawing of unstyled dialog. */
@@ -165,6 +177,13 @@ class Modal extends QPanel
 		$objWrapperStyler->AddCssClass('modal fade');
 		$objWrapperStyler->SetHtmlAttribute('tabIndex', -1);
 		$objWrapperStyler->SetHtmlAttribute('role', 'dialog');
+
+		if ($this->blnAutoRemove) {
+			// We need to immediately detect a close so we can remove it from the form
+			// Delay in an attempt to make sure this is the very last thing processed for the dialog.
+			// If you want to do something just before closing, trap the Modal_HideEVent
+			$this->AddAction(new Modal_HiddenEvent(10), new \QAjaxControlAction($this, 'Modal_Close'));
+		}
 	}
 
 	/**
@@ -401,7 +420,7 @@ class Modal extends QPanel
 		$dlg = new Modal($objForm, $strControlId);
 		//$dlg->MarkAsModified(); // Make sure it gets drawn.
 		$dlg->Text = $strMessage;
-		$dlg->AddAction (new Modal_HiddenEvent(), new \QAjaxControlAction($dlg, 'Alert_Close'));
+		$dlg->AddAction (new Modal_HiddenEvent(), new \QAjaxControlAction($dlg, 'Modal_Close'));
 		if ($strButtons) {
 			$dlg->blnHasCloseButton = false;
 			if (is_string($strButtons)) {
@@ -426,22 +445,18 @@ class Modal extends QPanel
 	}
 
 	/**
-	 * An alert is closing, so we remove the dialog from the dom.
+	 * An alert is closing, or the modal is getting autoRemoved so we remove the dialog.
 	 *
 	 */
-	public function Alert_Close() {
+	public function Modal_Close() {
 		$this->Form->RemoveControl($this->ControlId);
-		QApplication::ExecuteControlCommand($this->getJqControlId(), 'remove');
 	}
 
 	/**
 	 * Show the dialog. Implements the dialog interface.
 	 **/
 	public function ShowDialogBox() {
-		$this->Visible = true; // will redraw the control if needed
-		$this->Display = true; // will update the wrapper if needed
 		$this->Open();
-		//$this->blnWrapperModified = false;
 	}
 
 	/**
@@ -455,6 +470,8 @@ class Modal extends QPanel
 	 * Show the dialog. Only works if dialog is already on the page in a hidden state.
 	 */
 	public function Open() {
+		$this->Visible = true; // will redraw the control if needed
+		$this->Display = true; // will update the wrapper if needed
 		\QApplication::ExecuteControlCommand($this->ControlId, $this->GetJqSetupFunction(), 'open', QJsPriority::Low);
 	}
 

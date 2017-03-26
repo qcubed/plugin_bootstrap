@@ -17,6 +17,11 @@ class Button extends \QButton {
 	protected $strButtonSize = '';
 	protected $strGlyph;
 
+	public function __construct ($objParent, $strControlId = null) {
+		parent::__construct($objParent, $strControlId);
+		$this->AddCssFile(__BOOTSTRAP_CSS__);
+	}
+
 	public function SetStyleClass($strStyleClass) {
 		$this->RemoveCssClass($this->strButtonStyle);
 		$this->strButtonStyle = QType::Cast ($strStyleClass, QType::String);

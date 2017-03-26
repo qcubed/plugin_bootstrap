@@ -538,7 +538,7 @@ abstract class Bootstrap {
 	 * GetFormJavaScripts in your QForm class.
 	 */
 	public static function LoadJS($objControl) {
-		$objControl->AddJavascriptFile(__BOOTSTRAP_JS__);
+		$objControl->AddJavascriptFile('/' . __BOOTSTRAP_JS__);
 		$objControl->AddPluginJavascriptFile('bootstrap', 'qshim.js'); // for jquery ui compatibility
 
 	}

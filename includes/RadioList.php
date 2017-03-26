@@ -65,6 +65,19 @@ class RadioList extends \QRadioButtonList {
 		return $strToReturn;
 	}
 
+
+	/**
+	 * Override to fix update control with javascript
+	 */
+	protected function RefreshSelection() {
+		$curIndex = $this->SelectedIndex;
+		$count = $this->ItemCount;
+		$strToReturn = '';
+		for ($intIndex = 0; $intIndex < $count; $intIndex++) {
+			\QApplication::ExecuteSelectorFunction(['input', '#' . $this->ControlId . '_' . $intIndex], 'prop', 'checked', $curIndex == $intIndex);
+		}
+	}
+
 	/**
 	 * Adds an active class to the selected item at initial draw time. The bootstrap javascript will do change this
 	 * as the user clicks on the various buttons.
@@ -78,11 +91,6 @@ class RadioList extends \QRadioButtonList {
 			$objLabelAttributes->AddCssClass("active");
 		}
 	}
-
-	protected function RefreshSelection() {
-		$this->MarkAsModified();
-	}
-
 
 	public function __set($strName, $mixValue) {
 		switch ($strName) {

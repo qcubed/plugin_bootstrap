@@ -35,7 +35,7 @@ class Navbar extends \QControl {
 	public function __construct ($objParent, $strControlId = null) {
 		parent::__construct ($objParent, $strControlId);
 
-		//$this->AddCssFile(__BOOTSTRAP_CSS__);
+		$this->AddCssFile(__BOOTSTRAP_CSS__);
 		Bootstrap::LoadJS($this);
 	}
 
